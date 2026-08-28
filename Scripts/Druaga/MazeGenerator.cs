@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
 /// <summary>
 /// 迷路生成
 /// 空のGameObject作成
@@ -7,7 +9,6 @@ using UnityEngine;
 /// Width / Height は奇数推奨 21 × 21 31 × 31 など
 /// 再生 > 自動生成！
 /// </summary>
-/// 
 public class MazeGenerator : MonoBehaviour
 {
     [Header("Maze Size (odd numbers recommended)")]
@@ -21,12 +22,8 @@ public class MazeGenerator : MonoBehaviour
     [Header("Cell Size")]
     public float cellSize = 1f;
 
-    [Header("Enemy")]
-    public GameObject slimePrefab;
-    public int slimeCount = 5;
-
     int[,] maze; // 0 = wall, 1 = floor
-    int[,] Maze => maze; // 0 = wall, 1 = floor
+    public event Action<int[,]> OnMazeGenerated;
 
     Vector2Int[] directions =
     {
@@ -40,7 +37,8 @@ public class MazeGenerator : MonoBehaviour
     {
         Generate();
         Build();
-        SpawnSlimes();
+        // ★ ここで通知
+        OnMazeGenerated?.Invoke(maze);
     }
 
     void Generate()
@@ -86,7 +84,7 @@ public class MazeGenerator : MonoBehaviour
     {
         for (int i = 0; i < list.Count; i++)
         {
-            int r = Random.Range(i, list.Count);
+            int r = UnityEngine.Random.Range(i, list.Count);
             (list[i], list[r]) = (list[r], list[i]);
         }
     }
@@ -97,50 +95,36 @@ public class MazeGenerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                Vector3 pos = new Vector3(x * cellSize, 0, y * cellSize);
+                // 迷路の配列上の (1, 1) がワールド座標の (0, 0, 0) になるように調整
+                Vector3 pos = new Vector3((x - 1) * cellSize, 0, (y - 1) * cellSize);
+
+                GameObject instance;
 
                 if (maze[x, y] == 0)
                 {
-                    Instantiate(wallPrefab, pos, Quaternion.identity, transform);
+                    instance = Instantiate(wallPrefab, pos, Quaternion.identity, transform);
                 }
                 else
                 {
-                    Instantiate(floorPrefab, pos, Quaternion.identity, transform);
+                    instance = Instantiate(floorPrefab, pos, Quaternion.identity, transform);
                 }
+
+                // CellSizeに合わせてPrefabをスケーリング
+                instance.transform.localScale = new Vector3(cellSize, cellSize, cellSize);
             }
         }
     }
 
-    void SpawnSlimes()
+    public void Regenerate()
     {
-        List<Vector2Int> floorCells = new List<Vector2Int>();
-
-        for (int x = 1; x < width - 1; x++)
+        // 再生成時に前の迷路が残らないよう、子オブジェクトを削除する処理を追加（推奨）
+        foreach (Transform child in transform)
         {
-            for (int y = 1; y < height - 1; y++)
-            {
-                if (maze[x, y] == 1)
-                {
-                    floorCells.Add(new Vector2Int(x, y));
-                }
-            }
+            Destroy(child.gameObject);
         }
 
-        for (int i = 0; i < slimeCount && floorCells.Count > 0; i++)
-        {
-            int index = Random.Range(0, floorCells.Count);
-            Vector2Int cell = floorCells[index];
-            floorCells.RemoveAt(index);
-
-            Vector3 pos = new Vector3(
-                cell.x * cellSize,
-                0,
-                cell.y * cellSize
-            );
-
-            Instantiate(slimePrefab, pos, Quaternion.identity);
-        }
+        Generate();
+        Build();
+        OnMazeGenerated?.Invoke(maze);
     }
-
 }
-

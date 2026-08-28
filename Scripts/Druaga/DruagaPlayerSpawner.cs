@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DruagaPlayerSpawner : MonoBehaviour
 {
-    public MazeGenerator_simple mazeGenerator;
+    public MazeGenerator mazeGenerator;
     public MS_PlayerController playerController;
     public float cellSize = 1f;
 
@@ -17,7 +17,7 @@ public class DruagaPlayerSpawner : MonoBehaviour
     void Awake()
     {
         if (!mazeGenerator)
-            mazeGenerator = FindObjectOfType<MazeGenerator_simple>();
+            mazeGenerator = FindObjectOfType<MazeGenerator>();
     }
 
     void OnEnable()

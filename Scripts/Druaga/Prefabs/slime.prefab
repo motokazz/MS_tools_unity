@@ -55,7 +55,7 @@ MonoBehaviour:
   telegraphStretch: 0.15
   wallLayer:
     serializedVersion: 2
-    m_Bits: 65536
+    m_Bits: 0
 --- !u!135 &2514069626768012382
 SphereCollider:
   m_ObjectHideFlags: 0

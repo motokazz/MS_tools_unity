@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class DruagaEnemySpawner : MonoBehaviour
 {
-    public MazeGenerator_simple mazeGenerator;
+    public MazeGenerator mazeGenerator;
     public GameObject slimePrefab;
     public int slimeCount = 5;
     public float cellSize = 1f;
