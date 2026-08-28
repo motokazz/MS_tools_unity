@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fa2bdca242526584cbd22a27796d7f8b
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - dropdownMS_EnvSOs: {instanceID: 0}
+  - volume: {instanceID: 0}
+  - dropdowVolumeProfiles: {instanceID: 0}
+  - ro: {fileID: 11400000, guid: 5b9b7fb1ad4487548905115181bc1fdf, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

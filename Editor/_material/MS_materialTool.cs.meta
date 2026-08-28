@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: e99fa7b4f07e2fe4ea444d350fffbf1c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - mS_ShortCutterSO: {fileID: 11400000, guid: 5419e543dfa3f06488f32605fc24c2b7, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

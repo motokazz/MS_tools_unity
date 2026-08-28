@@ -1,0 +1,48 @@
+{
+    "shortCutFolders": [
+        {
+            "name": "Cursed_Toys_II",
+            "path": "Assets/Assets/Cursed_Toys_II"
+        },
+        {
+            "name": "RawData_Enemy",
+            "path": "Assets/Night/RawData/Enemy"
+        },
+        {
+            "name": "Shader",
+            "path": "Assets/Night/Shader"
+        },
+        {
+            "name": "RawData",
+            "path": "Assets/Night/RawData"
+        },
+        {
+            "name": "Entity_Parts",
+            "path": "Assets/AddressableResources/Entity/Parts"
+        },
+        {
+            "name": "Truck",
+            "path": "Assets/Night/RawData/Truck"
+        },
+        {
+            "name": "test_parts",
+            "path": "Assets/Night/RawData/Parts/test_parts"
+        },
+        {
+            "name": "VFX",
+            "path": "Assets/Night/RawData/VFX"
+        },
+        {
+            "name": "EntityAddressable",
+            "path": "Assets/AddressableResources/Entity/Entity"
+        },
+        {
+            "name": "EntityRawData",
+            "path": "Assets/Night/RawData/Entity"
+        },
+        {
+            "name": "StageBlock",
+            "path": "Assets/AddressableResources/StageBlock"
+        }
+    ]
+}

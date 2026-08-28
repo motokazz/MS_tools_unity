@@ -1,0 +1,32 @@
+{
+    "shortCuts": [
+        {
+            "name": "work_parts",
+            "sceneAsset": "Assets/WorkSpace/_motokazu/work/work_parts/work_parts.unity"
+        },
+        {
+            "name": "ms_viewer",
+            "sceneAsset": "Assets/WorkSpace/_motokazu/MS_tools/Scenes/ms_viewer.unity"
+        },
+        {
+            "name": "Game_Title",
+            "sceneAsset": "Assets/Night/Scene/Title.unity"
+        },
+        {
+            "name": "work_bg",
+            "sceneAsset": "Assets/WorkSpace/_motokazu/work/work_bg.unity"
+        },
+        {
+            "name": "Lobby",
+            "sceneAsset": "Assets/Night/Scene/Lobby.unity"
+        },
+        {
+            "name": "work_player",
+            "sceneAsset": "Assets/WorkSpace/_motokazu/work/work_player.unity"
+        },
+        {
+            "name": "Ingame",
+            "sceneAsset": "Assets/Night/Scene/Ingame.unity"
+        }
+    ]
+}

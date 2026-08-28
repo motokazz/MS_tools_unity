@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fef622ab852475b49b4d49f48f0cc4ed
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - universalRendererData: {fileID: 11400000, guid: 5b9b7fb1ad4487548905115181bc1fdf,
+      type: 2}
+  - volumeProfile: {fileID: 11400000, guid: d68abf95d08785a43bd233310ad15e33, type: 2}
+  - skyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
