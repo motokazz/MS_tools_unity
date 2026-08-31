@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.AI.Navigation; // ★ NavMeshSurfaceを使うために追加
 
 /// <summary>
 /// 迷路生成
@@ -22,6 +23,10 @@ public class MazeGenerator : MonoBehaviour
     [Header("Cell Size")]
     public float cellSize = 1f;
 
+    [Header("NavMesh")]
+    // ★ 指定したいNavMeshSurfaceをインスペクターからアタッチ
+    public NavMeshSurface navMeshSurface;
+
     int[,] maze; // 0 = wall, 1 = floor
     public event Action<int[,]> OnMazeGenerated;
 
@@ -37,7 +42,13 @@ public class MazeGenerator : MonoBehaviour
     {
         Generate();
         Build();
-        // ★ ここで通知
+
+        // ★ 迷路完成後にNavMeshをビルド
+        if (navMeshSurface != null)
+        {
+            navMeshSurface.BuildNavMesh();
+        }
+
         OnMazeGenerated?.Invoke(maze);
     }
 
@@ -117,7 +128,6 @@ public class MazeGenerator : MonoBehaviour
 
     public void Regenerate()
     {
-        // 再生成時に前の迷路が残らないよう、子オブジェクトを削除する処理を追加（推奨）
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
@@ -125,6 +135,13 @@ public class MazeGenerator : MonoBehaviour
 
         Generate();
         Build();
+
+        // ★ 再生成時にもNavMeshを更新
+        if (navMeshSurface != null)
+        {
+            navMeshSurface.BuildNavMesh();
+        }
+
         OnMazeGenerated?.Invoke(maze);
     }
 }
