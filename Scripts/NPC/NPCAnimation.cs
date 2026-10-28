@@ -14,7 +14,7 @@ public class NPCAnimation : MonoBehaviour
     [Header("パラメーター名定義")]
     [SerializeField] string speed = "Speed";
     [SerializeField] string angulerSpeed = "AngulerSpeed";
-
+    [SerializeField] float smoothTransition = 0.1f;
     Animator animator;
 
 
@@ -34,8 +34,9 @@ public class NPCAnimation : MonoBehaviour
 
     void Update()
     {
-        animator.SetFloat( speed , agent.velocity.magnitude);
-        animator.SetFloat( angulerSpeed , agent.velocity.x);
+        // Animator側に渡す際、0.1秒かけて滑らかに値を変化させる例
+        animator.SetFloat(speed, agent.velocity.magnitude, smoothTransition , Time.deltaTime);
+        animator.SetFloat( angulerSpeed , agent.velocity.x, smoothTransition , Time.deltaTime);
     }
 
     void Setup()

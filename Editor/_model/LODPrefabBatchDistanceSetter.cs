@@ -9,7 +9,7 @@ public class LODPrefabBatchDistanceSetter : EditorWindow
     private float startDistance = 10f; // LOD1が開始する距離（LOD0の終了）
     private float endDistance = 50f;   // カリングされる距離（最後のLODの終了）
 
-    [MenuItem("MS_Tools/Model/LOD 距離で一括設定 (Prefabバッチ処理)")]
+    [MenuItem("MS_Tools/Models/LOD 距離で一括設定 (バッチ処理)")]
     static void Init()
     {
         LODPrefabBatchDistanceSetter window = (LODPrefabBatchDistanceSetter)EditorWindow.GetWindow(typeof(LODPrefabBatchDistanceSetter));
@@ -27,7 +27,7 @@ public class LODPrefabBatchDistanceSetter : EditorWindow
             return;
         }
 
-        EditorGUILayout.LabelField("Prefab LOD Transition Settings", EditorStyles.boldLabel);
+        EditorGUILayout.LabelField("LOD Transition Settings", EditorStyles.boldLabel);
         startDistance = EditorGUILayout.FloatField("LOD開始距離 (LOD0終了)", startDistance);
         endDistance = EditorGUILayout.FloatField("カリング距離 (LOD終了)", endDistance);
 
@@ -38,21 +38,29 @@ public class LODPrefabBatchDistanceSetter : EditorWindow
 
         GUILayout.Space(10);
 
-        if (GUILayout.Button("選択中のプレファブアセットに適用"))
+        // Projectビュー（Prefab）用のボタン
+        if (GUILayout.Button("Projectの選択プレファブに適用"))
         {
             ApplyToSelectedPrefabs();
+        }
+
+        GUILayout.Space(5);
+
+        // Hierarchyビュー（Sceneオブジェクト）用のボタン
+        if (GUILayout.Button("Hierarchyの選択オブジェクトに適用"))
+        {
+            ApplyToSelectedGameObjects();
         }
     }
 
     void ApplyToSelectedPrefabs()
     {
-        // プロジェクトウィンドウで選択されているアセットの中から、プレファブのみを抽出
         GameObject[] selectedPrefabs = Selection.GetFiltered<GameObject>(SelectionMode.Assets)
-            .Where(go => PrefabUtility.IsPartOfPrefabAsset(go)).ToArray();
+            .Where(go => PrefabUtility.IsPartOfPrefabAsset(go)).ToArray(); //[cite: 1]
 
         if (selectedPrefabs.Length == 0)
         {
-            Debug.LogWarning("プレファブアセットが選択されていません。プロジェクトウィンドウでプレファブを選択してください。");
+            Debug.LogWarning("プレファブアセットが選択されていません。");
             return;
         }
 
@@ -61,108 +69,116 @@ public class LODPrefabBatchDistanceSetter : EditorWindow
 
         foreach (GameObject prefabAsset in selectedPrefabs)
         {
-            string assetPath = AssetDatabase.GetAssetPath(prefabAsset);
-
-            // プレファブの内容をメモリ上に展開して編集可能にする
-            GameObject contentsRoot = PrefabUtility.LoadPrefabContents(assetPath);
-
-            // 子オブジェクトも含めてすべてのLODGroupを取得
-            LODGroup[] lodGroups = contentsRoot.GetComponentsInChildren<LODGroup>(true);
+            string assetPath = AssetDatabase.GetAssetPath(prefabAsset); //[cite: 1]
+            GameObject contentsRoot = PrefabUtility.LoadPrefabContents(assetPath); //[cite: 1]
+            LODGroup[] lodGroups = contentsRoot.GetComponentsInChildren<LODGroup>(true); //[cite: 1]
 
             if (lodGroups.Length > 0)
             {
                 foreach (LODGroup lodGroup in lodGroups)
                 {
-                    ApplyLODTransitionByDistance(lodGroup);
+                    ApplyLODTransitionByDistance(lodGroup); //[cite: 1]
                     processedLODGroupCount++;
                 }
-
-                // 変更をプレファブアセットに保存
-                PrefabUtility.SaveAsPrefabAsset(contentsRoot, assetPath);
+                PrefabUtility.SaveAsPrefabAsset(contentsRoot, assetPath); //[cite: 1]
                 processedPrefabCount++;
             }
-
-            // メモリ上に展開したプレファブを破棄（必須）
-            PrefabUtility.UnloadPrefabContents(contentsRoot);
+            PrefabUtility.UnloadPrefabContents(contentsRoot); //[cite: 1]
         }
 
         if (processedPrefabCount > 0)
         {
-            AssetDatabase.SaveAssets();
-            Debug.Log($"バッチ処理完了: {processedPrefabCount}個のプレファブに含まれる、合計{processedLODGroupCount}個のLODGroupを更新しました。");
+            AssetDatabase.SaveAssets(); //[cite: 1]
+            Debug.Log($"バッチ処理完了: {processedPrefabCount}個のプレファブに含まれる、合計{processedLODGroupCount}個のLODGroupを更新しました。"); //[cite: 1]
         }
-        else
+    }
+
+    void ApplyToSelectedGameObjects()
+    {
+        // Hierarchy上で選択されている（Prefabアセットではない）オブジェクトを抽出
+        GameObject[] selectedGOs = Selection.gameObjects
+            .Where(go => !PrefabUtility.IsPartOfPrefabAsset(go)).ToArray();
+
+        if (selectedGOs.Length == 0)
         {
-            Debug.Log("選択されたプレファブの中にLODGroupを持つものはありませんでした。");
+            Debug.LogWarning("ヒエラルキー上でオブジェクトが選択されていません。");
+            return;
+        }
+
+        int processedCount = 0;
+
+        foreach (GameObject go in selectedGOs)
+        {
+            LODGroup[] lodGroups = go.GetComponentsInChildren<LODGroup>(true);
+            foreach (LODGroup lodGroup in lodGroups)
+            {
+                ApplyLODTransitionByDistance(lodGroup);
+                processedCount++;
+            }
+        }
+
+        if (processedCount > 0)
+        {
+            Debug.Log($"バッチ処理完了: ヒエラルキー上の{processedCount}個のLODGroupを更新しました。");
         }
     }
 
     void ApplyLODTransitionByDistance(LODGroup lodGroup)
     {
-        Bounds bounds = GetObjectBounds(lodGroup);
-        LOD[] lods = lodGroup.GetLODs();
-        int lodCount = lods.Length;
+        // Hierarchyでの変更を取り消せるようにUndoを登録
+        Undo.RecordObject(lodGroup, "Update LOD Distances");
 
-        if (lodCount == 0) return;
+        // LODGroup内部のバウンディング情報を最新化し、スケール非依存のベースサイズを取得する
+        lodGroup.RecalculateBounds(); //[cite: 1]
+        float objectSize = lodGroup.size;
 
-        for (int i = 0; i < lodCount; i++)
+        LOD[] lods = lodGroup.GetLODs(); //[cite: 1]
+        int lodCount = lods.Length; //[cite: 1]
+
+        if (lodCount == 0) return; //[cite: 1]
+
+        for (int i = 0; i < lodCount; i++) //[cite: 1]
         {
             float desiredDistance;
 
-            if (lodCount == 1)
+            if (lodCount == 1) //[cite: 1]
             {
-                desiredDistance = endDistance;
+                desiredDistance = endDistance; //[cite: 1]
             }
-            else
+            else //[cite: 1]
             {
-                desiredDistance = Mathf.Lerp(startDistance, endDistance, (float)i / (lodCount - 1));
-            }
-
-            float transitionHeight = GetTransitionHeightAsUnityDoes(bounds, referenceCamera, desiredDistance);
-
-            if (i > 0 && transitionHeight >= lods[i - 1].screenRelativeTransitionHeight)
-            {
-                transitionHeight = lods[i - 1].screenRelativeTransitionHeight - 0.01f;
+                desiredDistance = Mathf.Lerp(startDistance, endDistance, (float)i / (lodCount - 1)); //[cite: 1]
             }
 
-            lods[i].screenRelativeTransitionHeight = Mathf.Clamp01(transitionHeight);
+            float transitionHeight = GetTransitionHeight(objectSize, referenceCamera, desiredDistance);
+
+            // 前のLODの遷移高さより大きくならないようにクランプ処理[cite: 1]
+            if (i > 0 && transitionHeight >= lods[i - 1].screenRelativeTransitionHeight) //[cite: 1]
+            {
+                transitionHeight = lods[i - 1].screenRelativeTransitionHeight - 0.01f; //[cite: 1]
+            }
+
+            lods[i].screenRelativeTransitionHeight = Mathf.Clamp01(transitionHeight); //[cite: 1]
         }
 
-        lodGroup.SetLODs(lods);
-        lodGroup.RecalculateBounds();
+        lodGroup.SetLODs(lods); //[cite: 1]
     }
 
-    Bounds GetObjectBounds(LODGroup lodGroup)
+    // 元のGetObjectBounds関数を削除し、サイズを直接引数に取るよう変更
+    float GetTransitionHeight(float objectSize, Camera cam, float distance)
     {
-        Renderer[] renderers = lodGroup.GetComponentsInChildren<Renderer>();
-        if (renderers.Length == 0)
-            return new Bounds(lodGroup.transform.position, Vector3.zero);
-
-        Bounds bounds = renderers[0].bounds;
-        for (int i = 1; i < renderers.Length; i++)
-        {
-            bounds.Encapsulate(renderers[i].bounds);
-        }
-        return bounds;
-    }
-
-    float GetTransitionHeightAsUnityDoes(Bounds bounds, Camera cam, float distance)
-    {
-        if (cam == null || bounds.size.magnitude == 0)
+        if (cam == null || objectSize == 0)
             return 1f;
 
-        Vector3 worldSpaceSize = bounds.size;
-        float objectSize = Mathf.Max(worldSpaceSize.x, worldSpaceSize.y, worldSpaceSize.z);
-
-        if (cam.orthographic)
+        if (cam.orthographic) //[cite: 1]
         {
-            float vertical = cam.orthographicSize * 2f;
-            return objectSize / vertical;
+            float vertical = cam.orthographicSize * 2f; //[cite: 1]
+            return objectSize / vertical; //[cite: 1]
         }
-        else
+        else //[cite: 1]
         {
-            float frustumHeight = 2.0f * distance * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad);
-            return objectSize / frustumHeight;
+            float frustumHeight = 2.0f * distance * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad); //[cite: 1]
+            return objectSize / frustumHeight; //[cite: 1]
         }
     }
 }

@@ -10,7 +10,7 @@ public class MergeLODsPivotExportSafe : EditorWindow
 
     const string LAST_FBX_EXPORT_DIR_KEY = "MergedLODs_LastExportPath";
 
-    [MenuItem("MS_Tools/Model/Merge LODs to FBX (Pivot, Safe)")]
+    [MenuItem("MS_Tools/Models/Merge LODs to FBX (Pivot, Safe)")]
     static void Init()
     {
         GetWindow<MergeLODsPivotExportSafe>("LOD Merge & Export").Show();

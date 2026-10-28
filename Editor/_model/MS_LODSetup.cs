@@ -3,7 +3,7 @@ using UnityEditor;
 
 public class MoveMeshAndSetupTwoLODs : EditorWindow
 {
-    [MenuItem("MS_Tools/Model/Move Mesh To Child and Setup 2 LODs")]
+    [MenuItem("MS_Tools/Models/Move Mesh To Child and Setup 2 LODs")]
 
     public static void ShowWindow()
     {

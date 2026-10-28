@@ -9,7 +9,7 @@ public class BoundingBoxMesh : EditorWindow
 
 
 
-    [MenuItem("MS_Tools/Model/CreateBB")]
+    [MenuItem("MS_Tools/Models/CreateBB")]
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(BoundingBoxMesh));

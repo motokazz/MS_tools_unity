@@ -14,7 +14,7 @@ public class MS_materialTool : EditorWindow
     
     private Material[] selectedMaterials; // 選択されたマテリアル
 
-    [MenuItem("MS_Tools/Material/MS_materialTool")]
+    [MenuItem("MS_Tools/Materials/MS_materialTool")]
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(MS_materialTool));
