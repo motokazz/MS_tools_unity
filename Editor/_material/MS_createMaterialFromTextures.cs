@@ -6,7 +6,7 @@ using System.IO;
 
 public class CreateMaterialFromTextures : EditorWindow
 {
-    [MenuItem("MS_Tools/Material/MS_createMaterialFromTextures")]
+    [MenuItem("MS_Tools/Materials/MS_createMaterialFromTextures")]
     public static void ShowWindow()
     {
         EditorWindow.GetWindow(typeof(CreateMaterialFromTextures));

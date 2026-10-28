@@ -11,7 +11,7 @@ public class LODDistanceSetter : EditorWindow
     private float startDistance = 10f; // LOD1が開始する距離（LOD0の終了）
     private float endDistance = 50f;   // カリングされる距離（最後のLODの終了）
 
-    [MenuItem("MS_Tools/Model/LOD 距離で一括設定")]
+    [MenuItem("MS_Tools/Models/LOD 距離で一括設定")]
     static void Init()
     {
         LODDistanceSetter window = (LODDistanceSetter)EditorWindow.GetWindow(typeof(LODDistanceSetter));

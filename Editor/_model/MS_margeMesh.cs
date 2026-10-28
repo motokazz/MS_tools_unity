@@ -4,7 +4,7 @@ using System.IO;
 
 public class MeshMergerEditor : EditorWindow
 {
-    [MenuItem("MS_Tools/Model/Mesh Merger")]
+    [MenuItem("MS_Tools/Models/Mesh Merger")]
     public static void ShowWindow()
     {
         GetWindow<MeshMergerEditor>("Mesh Merger");

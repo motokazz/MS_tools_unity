@@ -1,4 +1,4 @@
-//  ReplacingPrefabWindow.cs
+ï»¿//  ReplacingPrefabWindow.cs
 //  http://kan-kikuchi.hatenablog.com/entry/ReplacingPrefabWindow
 //
 //  Created by kan.kikuchi on 2020.02.27.
@@ -10,29 +10,29 @@ using System.Collections.Generic;
 using UnityEditor;
 
 /// <summary>
-/// Prefab‚ğ·‚µ‘Ö‚¦‚éƒEƒBƒ“ƒhƒE
+/// Prefabã‚’å·®ã—æ›¿ãˆã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
 /// </summary>
 public class ReplacingPrefabWindow_mod : EditorWindow
 {
 
-    //ƒXƒNƒ[ƒ‹ˆÊ’u
+    //ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä½ç½®
     private Vector2 _scrollPosition = Vector2.zero;
 
-    //·‚µ‘Ö‚¦æ‚ÌPrefab
+    //å·®ã—æ›¿ãˆå…ˆã®Prefab
     private GameObject _taretPrefab;
 
-    //Še’l‚ğŒÅ’è‚·‚é‚©
+    //å„å€¤ã‚’å›ºå®šã™ã‚‹ã‹
     private bool _isFixPosition = true, _isFixRotation = true, _isFixScale = true;
 
-    //Undo‚Ì–¼‘O
-    private const string UndoName = " Prefab‚ğ·‚µ‘Ö‚¦";
+    //Undoæ™‚ã®åå‰
+    private const string UndoName = " Prefabã‚’å·®ã—æ›¿ãˆ";
 
     //=================================================================================
-    //‰Šú‰»
+    //åˆæœŸåŒ–
     //=================================================================================
 
-    //ƒƒjƒ…[‚©‚çƒEƒBƒ“ƒhƒE‚ğ•\¦
-    [MenuItem("Window/MS_Tools/ReplacingPrefabWindow_mod")]
+    //ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‹ã‚‰ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¡¨ç¤º
+    [MenuItem("MS_Tools/Assets/ReplacingPrefabWindow_mod")]
     public static void Open()
     {
         ReplacingPrefabWindow_mod.GetWindow(typeof(ReplacingPrefabWindow_mod));
@@ -40,28 +40,28 @@ public class ReplacingPrefabWindow_mod : EditorWindow
 
     private void OnEnable()
     {
-        //‘I‘ğ‚³‚ê‚Ä‚¢‚é•¨‚ª•Ï‚í‚Á‚½‚çGUI‚ğXV‚·‚é‚æ‚¤‚É
+        //é¸æŠã•ã‚Œã¦ã„ã‚‹ç‰©ãŒå¤‰ã‚ã£ãŸã‚‰GUIã‚’æ›´æ–°ã™ã‚‹ã‚ˆã†ã«
         Selection.selectionChanged += Repaint;
     }
 
     //=================================================================================
-    //•\¦‚·‚éGUI‚Ìİ’è
+    //è¡¨ç¤ºã™ã‚‹GUIã®è¨­å®š
     //=================================================================================
 
     private void OnGUI()
     {
-        //ƒXƒNƒ[ƒ‹ˆÊ’u•Û‘¶
+        //ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ä½ç½®ä¿å­˜
         _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, GUI.skin.scrollView);
 
-        //·‚µ‘Ö‚¦æ‚ÌPrefab‘I‘ğUI
-        EditorGUILayout.LabelField("·‚µ‘Ö‚¦æ‚ÌPrefab");
+        //å·®ã—æ›¿ãˆå…ˆã®Prefabé¸æŠUI
+        EditorGUILayout.LabelField("å·®ã—æ›¿ãˆå…ˆã®Prefab");
         EditorGUILayout.BeginHorizontal(GUI.skin.box);
         _taretPrefab = (GameObject)EditorGUILayout.ObjectField(_taretPrefab, typeof(GameObject), false);
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space();
 
-        //Še’l‚ğŒÅ’è‚·‚é‚©‚ğİ’è‚·‚éUI
-        EditorGUILayout.LabelField("·‚µ‘Ö‚¦Œ³‚ÌŒÅ’è‚·‚é€–Ú");
+        //å„å€¤ã‚’å›ºå®šã™ã‚‹ã‹ã‚’è¨­å®šã™ã‚‹UI
+        EditorGUILayout.LabelField("å·®ã—æ›¿ãˆå…ƒã®å›ºå®šã™ã‚‹é …ç›®");
         EditorGUILayout.BeginHorizontal(GUI.skin.box);
         _isFixPosition = EditorGUILayout.ToggleLeft("Position", _isFixPosition, GUILayout.Width(100));
         _isFixRotation = EditorGUILayout.ToggleLeft("Rotation", _isFixRotation, GUILayout.Width(100));
@@ -69,8 +69,8 @@ public class ReplacingPrefabWindow_mod : EditorWindow
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space();
 
-        //‘I‘ğ’†(·‚µ‘Ö‚¦Œ³)‚ÌƒIƒuƒWƒFƒNƒgˆê——
-        EditorGUILayout.LabelField("·‚µ‘Ö‚¦‚é(‘I‘ğ‚µ‚Ä‚¢‚é)ƒIƒuƒWƒFƒNƒgˆê——");
+        //é¸æŠä¸­(å·®ã—æ›¿ãˆå…ƒ)ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§
+        EditorGUILayout.LabelField("å·®ã—æ›¿ãˆã‚‹(é¸æŠã—ã¦ã„ã‚‹)ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§");
         EditorGUILayout.BeginVertical(GUI.skin.box);
         var selectingTransforms = Selection.transforms;
         foreach (var selectingTransform in selectingTransforms)
@@ -80,33 +80,33 @@ public class ReplacingPrefabWindow_mod : EditorWindow
         EditorGUILayout.EndVertical();
         EditorGUILayout.Space();
 
-        //·‚µ‘Ö‚¦Àsƒ{ƒ^ƒ“
+        //å·®ã—æ›¿ãˆå®Ÿè¡Œãƒœã‚¿ãƒ³
         if (_taretPrefab == null)
         {
-            EditorGUILayout.HelpBox("·‚µ‘Ö‚¦æ‚ÌPrefab‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ", MessageType.Error);
+            EditorGUILayout.HelpBox("å·®ã—æ›¿ãˆå…ˆã®PrefabãŒè¨­å®šã•ã‚Œã¦ã„ã¾ã›ã‚“", MessageType.Error);
         }
         else if (selectingTransforms.Length == 0)
         {
-            EditorGUILayout.HelpBox("·‚µ‘Ö‚¦‚éƒIƒuƒWƒFƒNƒg‚ª‘I‘ğ‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ", MessageType.Error);
+            EditorGUILayout.HelpBox("å·®ã—æ›¿ãˆã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒé¸æŠã•ã‚Œã¦ã„ã¾ã›ã‚“", MessageType.Error);
         }
-        else if (GUILayout.Button("·‚µ‘Ö‚¦Às"))
+        else if (GUILayout.Button("å·®ã—æ›¿ãˆå®Ÿè¡Œ"))
         {
             Replace(selectingTransforms);
         }
 
-        //•`‰æ”ÍˆÍ‚ª‘«‚è‚È‚©‚ê‚ÎƒXƒNƒ[ƒ‹
+        //æç”»ç¯„å›²ãŒè¶³ã‚Šãªã‹ã‚Œã°ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«
         EditorGUILayout.EndScrollView();
     }
 
     //=================================================================================
-    //·‚µ‘Ö‚¦
+    //å·®ã—æ›¿ãˆ
     //=================================================================================
 
     private void Replace(Transform[] transforms)
     {
         foreach (var transform in transforms)
         {
-            //Œ³‚ÌƒIƒuƒWƒFƒNƒg‚ÌˆÊ’u‚ÉPrefab‚Ì‚Ü‚Üİ’u
+            //å…ƒã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½ç½®ã«Prefabã®ã¾ã¾è¨­ç½®
             var newObject = (PrefabUtility.InstantiatePrefab(_taretPrefab) as GameObject).transform;
             Undo.RegisterCreatedObjectUndo(newObject.gameObject, UndoName);
             Undo.SetTransformParent(newObject, transform.parent, UndoName);
@@ -124,7 +124,7 @@ public class ReplacingPrefabWindow_mod : EditorWindow
                 newObject.localScale = transform.localScale;
             }
 
-            //Œ³‚ÌƒIƒuƒWƒFƒNƒg‚ğUndo‚É“o˜^‚µ‚Äíœ
+            //å…ƒã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’Undoã«ç™»éŒ²ã—ã¦å‰Šé™¤
             Undo.DestroyObjectImmediate(transform.gameObject);
         }
     }
