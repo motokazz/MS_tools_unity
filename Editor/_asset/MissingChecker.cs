@@ -160,7 +160,7 @@ public class MS_MissingFinder : EditorWindow
                         if (prop.propertyType == SerializedPropertyType.ObjectReference)
                         {
                             if (prop.objectReferenceValue == null &&
-                                prop.objectReferenceEntityIdValue != EntityId.None)
+                                prop.objectReferenceInstanceIDValue != 0)
                             {
                                 var info = new MissingInfo
                                 {
